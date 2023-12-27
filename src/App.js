@@ -1,14 +1,17 @@
 import React from 'react'; 
 import './App.css';
-import Header from './components/Layout/Header';
-import Signup from './components/Signup/Signup';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import RootLayout from './components/Layout/RootLayout';
+import Home from './components/Layout/Home';
 
 function App() {
   return (
-    <React.Fragment>
-      <Header />
-      <Signup />
-    </React.Fragment>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<RootLayout />} exact />
+        <Route path='/home' element={<Home />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

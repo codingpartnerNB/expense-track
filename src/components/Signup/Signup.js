@@ -1,77 +1,105 @@
 import { useRef, useState } from "react";
-import styles from './Signup.module.css';
+import { useNavigate } from 'react-router-dom';
+import styles from "./Signup.module.css";
 
-const Signup = ()=>{
-    const emailInputRef = useRef();
-    const passwordInputRef = useRef();
-    const cPasswordInputRef = useRef();
-    const [isLoading, setIsLoading] = useState(false);
+const Signup = () => {
+  const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const emailInputRef = useRef();
+  const passwordInputRef = useRef();
+  const cPasswordInputRef = useRef();
 
-    const submitHandler = async(event)=>{
-        event.preventDefault();
-        const enteredEmail = emailInputRef.current.value;
-        const enteredPassword = passwordInputRef.current.value;
-        const enteredConfPassword = cPasswordInputRef.current.value;
-        if(enteredPassword !== enteredConfPassword){
-            alert("Password and confirm password should be matched!");
-            return;
-        }
+  const switchAuthModeHandler = () => {
+    setIsLogin((prevState) => !prevState);
+  };
 
-        setIsLoading(true);
-        const url = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCFNkfAZd3AxFad0tQUmqaOC6iCl9eNS7s";
-        try{
-            const res = await fetch(url,{
-                method: "POST",
-                body: JSON.stringify({
-                    email: enteredEmail,
-                    password: enteredPassword,
-                    returnSecureToken: true,
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            setIsLoading(false);
-            const data = await res.json();
-            if(data && data.message){
-                alert(data.idToken);
-                console.log("User has successfully signed up!");
-            }else{
-                console.log("Signing in");
-            }
-            if(!res.ok){
-                throw new Error("Something went wrong!");
-            }
-        }catch(error){
-            console.log(error.message);
-        }
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    const enteredEmail = emailInputRef.current.value;
+    const enteredPassword = passwordInputRef.current.value;
+    if (!isLogin) {
+      const enteredConfPassword = cPasswordInputRef.current.value;
+      if (enteredPassword !== enteredConfPassword) {
+        alert("Password and confirm password should be matched!");
+        return;
+      }
     }
-    return(
-        <section className={styles.main}>
-            <h1>Sign Up</h1>
-            <form onSubmit={submitHandler}>
-                <div className={styles.control}>
-                    <label htmlFor="email">Email</label>
-                    <input type="email" id="email" ref={emailInputRef} required />
-                </div>
-                <div className={styles.control}>
-                    <label htmlFor="password">Password</label>
-                    <input type="password" id="password" ref={passwordInputRef} required />
-                </div>
-                <div className={styles.control}>
-                    <label htmlFor="cpassword">Confirm Password</label>
-                    <input type="password" id="cpassword" ref={cPasswordInputRef} required />
-                </div>
-                <div className={styles.actions}>
-                    {!isLoading && <button type="submit">Sign up</button>}
-                    {isLoading && <p>Sending request...</p>}
-                </div>
-                <div className={styles.actions}>
-                    <button type="button">Have an account? Login</button>
-                </div>
-            </form>
-        </section>
-    );
-}
+
+    setIsLoading(true);
+    let url;
+    if (isLogin) {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCFNkfAZd3AxFad0tQUmqaOC6iCl9eNS7s";
+    } else {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCFNkfAZd3AxFad0tQUmqaOC6iCl9eNS7s";
+    }
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          email: enteredEmail,
+          password: enteredPassword,
+          returnSecureToken: true,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      setIsLoading(false);
+      console.log("User has successfully signed up!");
+      navigate('/home');
+      if (!res.ok) {
+        throw new Error("Something went wrong!");
+      }
+    }catch(error) {
+      console.log(error);
+    }
+  };
+  return (
+    <section className={styles.main}>
+      <h1>{isLogin ? "Log In" : "Sign Up"}</h1>
+      <form onSubmit={submitHandler}>
+        <div className={styles.control}>
+          <label htmlFor="email">Email</label>
+          <input type="email" id="email" ref={emailInputRef} required />
+        </div>
+        <div className={styles.control}>
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            ref={passwordInputRef}
+            required
+          />
+        </div>
+        {!isLogin && (
+          <div className={styles.control}>
+            <label htmlFor="cpassword">Confirm Password</label>
+            <input
+              type="password"
+              id="cpassword"
+              ref={cPasswordInputRef}
+              required
+            />
+          </div>
+        )}
+        <div className={styles.actions}>
+          {!isLoading && (
+            <button type="submit">{isLogin ? "Login" : "Sign up"}</button>
+          )}
+          {isLoading && <p>Sending request...</p>}
+          {isLogin && <p>Forgot password</p>}
+        </div>
+        <div className={styles.actions}>
+          <button type="button" onClick={switchAuthModeHandler}>
+            {isLogin ? "Don't have an account? Signup" : "Have an account? Login"}
+          </button>
+        </div>
+      </form>
+    </section>
+  );
+};
 
 export default Signup;
