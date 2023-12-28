@@ -1,9 +1,11 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import styles from "./Signup.module.css";
+import AuthContext from "../../store/auth-context";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const authCtx = useContext(AuthContext);
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const emailInputRef = useRef();
@@ -48,6 +50,8 @@ const Signup = () => {
         },
       });
       setIsLoading(false);
+      const data = await res.json();
+      authCtx.getToken(data.idToken);
       console.log("User has successfully signed up!");
       navigate('/home');
       if (!res.ok) {
