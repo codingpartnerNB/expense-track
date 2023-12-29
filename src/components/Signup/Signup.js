@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from "./Signup.module.css";
 import AuthContext from "../../store/auth-context";
 
@@ -94,7 +94,7 @@ const Signup = () => {
             <button type="submit">{isLogin ? "Login" : "Sign up"}</button>
           )}
           {isLoading && <p>Sending request...</p>}
-          {isLogin && <p>Forgot password</p>}
+          {isLogin && <Link to='/'>Forgot password</Link>}
         </div>
         <div className={styles.actions}>
           <button type="button" onClick={switchAuthModeHandler}>

@@ -5,6 +5,7 @@ import RootLayout from './components/Layout/RootLayout';
 import Home from './components/Layout/Home';
 import UpdateProfile from './components/Layout/UpdateProfile';
 import { AuthContextProvider } from './store/auth-context';
+import EditUserDetails from './components/Layout/EditUserDetails';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path='/' element={<RootLayout />} exact />
           <Route path='/home' element={<Home />} />
           <Route path='/update' element={<UpdateProfile />} />
+          <Route path='/edit' element={<EditUserDetails />} />
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>

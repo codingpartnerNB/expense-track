@@ -9,6 +9,7 @@
 
 .head h1{
     color:blue;
+    margin: auto 3.5rem;
 }
 
 .nav ul{
@@ -21,4 +22,8 @@
 
 .nav li{
     margin: 0 1rem;
+}
+
+a{
+    text-decoration: none;
 }

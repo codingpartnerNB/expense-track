@@ -1,0 +1,27 @@
+.head{
+    display : flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(174, 188, 218);
+}
+
+.head h1{
+    color: blue;
+    margin-left: 3.5rem;
+}
+
+.head p{
+    background-color: pink;
+    border-radius: 8px;
+    padding: 5px 10px;
+    margin: auto 2rem;
+}
+
+.main{
+    margin-top: 4rem;
+}
+
+.main h2{
+    text-align: center;
+    color: blue;
+}
