@@ -19,9 +19,26 @@
 
 .main{
     margin-top: 4rem;
+    text-align: center;
 }
 
 .main h2{
-    text-align: center;
     color: blue;
+}
+
+
+.action{
+    cursor: pointer;
+    font: inherit;
+    margin: 1.5rem;
+    color: white;
+    background-color: blue;
+    border: 1px solid rgb(20, 20, 246);
+    border-radius: 8px;
+    padding: 0.5rem 2.5rem;
+}
+
+.action:hover{
+    background-color: rgb(13, 13, 101);
+    border: 1px solid rgb(20, 20, 246);
 }

@@ -2,17 +2,36 @@ import React, { useState } from "react"
 
 const AuthContext = React.createContext({
     token: "",
-    getToken : (token)=>{}
+    email: "",
+    isLoggedIn: false,
+    login: (email, token)=>{},
+    logout: ()=>{}
 });
 
 export const AuthContextProvider = (props)=>{
-    const [token, setToken] = useState("");
-    const getTokenHandler = (token)=>{
+    const initialToken = localStorage.getItem("token");
+    const initialEmail = localStorage.getItem("email");
+    const [token, setToken] = useState(initialToken);
+    const [email, setEmail] = useState(initialEmail);
+    const loggingIn = !!token;
+    const loginHandler = (email, token)=>{
         setToken(token);
+        setEmail(email);
+        localStorage.setItem("token", token);
+        localStorage.setItem("email", email);
+    }
+    const logoutHandler = ()=>{
+        setEmail(null);
+        setToken(null);
+        localStorage.removeItem("token");
+        localStorage.removeItem("email");
     }
     const data = {
         token : token,
-        getToken: getTokenHandler
+        email: email,
+        isLoggedIn: loggingIn,
+        login: loginHandler,
+        logout: logoutHandler
     }
     return <AuthContext.Provider value={data}>
         {props.children}

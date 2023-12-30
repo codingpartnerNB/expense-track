@@ -51,7 +51,7 @@ const Signup = () => {
       });
       setIsLoading(false);
       const data = await res.json();
-      authCtx.getToken(data.idToken);
+      authCtx.login(data.email, data.idToken);
       console.log("User has successfully signed up!");
       navigate('/home');
       if (!res.ok) {
