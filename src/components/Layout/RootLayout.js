@@ -1,14 +1,13 @@
 import React from "react";
 import Header from "./Header";
-import Signup from "../Signup/Signup";
+import { Outlet } from "react-router-dom";
 
 const RootLayout = (props)=>{
     return(
         <React.Fragment>
             <Header/>
-            <Signup />
             <main>
-                {props.children}
+                <Outlet />
             </main>
         </React.Fragment>
     );

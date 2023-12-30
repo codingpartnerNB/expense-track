@@ -5,15 +5,18 @@ import RootLayout from './components/Layout/RootLayout';
 import Home from './components/Layout/Home';
 import UpdateProfile from './components/Layout/UpdateProfile';
 import { AuthContextProvider } from './store/auth-context';
+import Signup from './components/Signup/Signup';
 
 function App() {
   return (
     <AuthContextProvider>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<RootLayout />} exact />
-          <Route path='/home' element={<Home />} />
-          <Route path='/update' element={<UpdateProfile />} />
+          <Route path='/' element={<RootLayout />} >
+            <Route index element={<Signup />} />
+            <Route path='home' element={<Home />} />
+            <Route path='update' element={<UpdateProfile />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>

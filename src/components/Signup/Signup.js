@@ -52,7 +52,11 @@ const Signup = () => {
       setIsLoading(false);
       const data = await res.json();
       authCtx.login(data.email, data.idToken);
-      console.log("User has successfully signed up!");
+      if(isLogin){
+        console.log("User has successfully logged in!");
+      }else{
+        console.log("User has successfully signed up!");
+      }
       navigate('/home');
       if (!res.ok) {
         throw new Error("Something went wrong!");
