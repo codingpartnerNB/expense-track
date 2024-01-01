@@ -6,6 +6,7 @@ import Home from './components/Layout/Home';
 import UpdateProfile from './components/Layout/UpdateProfile';
 import { AuthContextProvider } from './store/auth-context';
 import Signup from './components/Signup/Signup';
+import ForgotPassword from './components/Layout/ForgotPassword';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route index element={<Signup />} />
             <Route path='home' element={<Home />} />
             <Route path='update' element={<UpdateProfile />} />
+            <Route path='forgot' element={<ForgotPassword />} />
           </Route>
         </Routes>
       </BrowserRouter>

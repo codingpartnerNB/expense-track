@@ -65,6 +65,8 @@ const Signup = () => {
       console.log(error);
     }
   };
+
+  
   return (
     <section className={styles.main}>
       <h1>{isLogin ? "Log In" : "Sign Up"}</h1>
@@ -98,7 +100,7 @@ const Signup = () => {
             <button type="submit">{isLogin ? "Login" : "Sign up"}</button>
           )}
           {isLoading && <p>Sending request...</p>}
-          {isLogin && <Link to='/'>Forgot password</Link>}
+          {isLogin && <Link to='/forgot'>Forgot password</Link>}
         </div>
         <div className={styles.actions}>
           <button type="button" onClick={switchAuthModeHandler}>
