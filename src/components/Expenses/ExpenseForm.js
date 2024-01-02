@@ -5,7 +5,7 @@ import styles from './ExpenseForm.module.css';
 const ExpenseForm = (props)=>{
     const [price, setPrice] = useState("");
     const [desc, setDesc] = useState("");
-    const [category, setCategory] = useState("Select Category");
+    const [category, setCategory] = useState("");
     const priceChangeHandler = (event)=>{
         setPrice(event.target.value);
     }
@@ -15,15 +15,30 @@ const ExpenseForm = (props)=>{
     const categoryChangeHandler = (event)=>{
         setCategory(event.target.value);
     }
-    const submitHandler = (event)=>{
+    const submitHandler = async(event)=>{
         event.preventDefault();
         const data = {
-            id: Math.floor(Math.random()*20),
             price: +price,
             description: desc,
             category: category
         }
-        props.expenseData.push(data);
+        const url = `https://expense-track-ddb59-default-rtdb.firebaseio.com/expenses.json`;
+        try{
+            const res = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const resdata = await res.json(); 
+            console.log(resdata);   
+            if(!res.ok){
+                throw new Error("Something went wrong while storing expenses!");
+            }
+        }catch(error){
+            console.log(error);
+        }
         setPrice("");
         setDesc("");
         setCategory("Select Category");
@@ -46,7 +61,7 @@ const ExpenseForm = (props)=>{
                     <div className={styles.control}>
                         <label htmlFor="category">Category</label>
                         <select value={category} id="category" onChange={categoryChangeHandler}>
-                            <option value="Select Category">Select Category</option>
+                            <option>Select Category</option>
                             <option value="Food">Food</option>
                             <option value="Petrol">Petrol</option>
                             <option value="Salary">Salary</option>

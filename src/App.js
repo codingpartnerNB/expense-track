@@ -10,7 +10,6 @@ import ForgotPassword from "./components/Layout/ForgotPassword";
 import Expenses from "./components/Expenses/Expenses";
 import ExpenseForm from "./components/Expenses/ExpenseForm";
 
-const expenseData = [];
 function App() {
   const authCtx = useContext(AuthContext);
   const [cartIsShown, setCartIsShown] = useState(false);
@@ -41,9 +40,9 @@ function App() {
             element={
               authCtx.isLoggedIn ? (
                 cartIsShown ? (
-                  <ExpenseForm expenseData={expenseData} onHideCart={hideCartHandler} />
+                  <ExpenseForm onHideCart={hideCartHandler} />
                 ) : (
-                  <Expenses expenseData={expenseData} onShowCart={showCartHandler} />
+                  <Expenses onShowCart={showCartHandler} />
                 )
               ) : (
                 <Navigate to="/" />

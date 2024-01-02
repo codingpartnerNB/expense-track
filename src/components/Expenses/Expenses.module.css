@@ -1,3 +1,37 @@
+.container{
+    width: 50vw;
+    height: auto;
+    border: 1px solid blue;
+    margin: 1rem auto;
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+
+th{
+    font-size: large;
+}
+
+hr{
+    height: 3px;
+    background-color: blue;
+    border-color: blue;
+    border-radius: 3px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+tr{
+    background-color: rgb(174, 188, 218);
+}
+td{
+    text-align: center;
+    border-radius: 8px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+
 .actions{
     margin-top: 2rem;
     text-align: center;
