@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from './Home.module.css';
 import React, { useContext } from "react";
 import AuthContext from "../../store/auth-context";
 
 const Home = ()=>{
     const authCtx = useContext(AuthContext);
+    const navigate = useNavigate();
     const varifyMailHandler = async(event)=>{
         event.preventDefault();
         try{
@@ -27,6 +28,10 @@ const Home = ()=>{
             console.log(error);
         }
     }
+
+    const addExpensesHandler = ()=>{
+        navigate('/expenses');
+    }
     return(
         <React.Fragment>
             <header>
@@ -41,6 +46,7 @@ const Home = ()=>{
             <main className={styles.main}>
                 <h2>Good Morning</h2>
                 <button className={styles.action} onClick={varifyMailHandler}>Varify Email</button>
+                <button className={styles.action} onClick={addExpensesHandler}>Add Expenses</button>
             </main>
         </React.Fragment>
     );

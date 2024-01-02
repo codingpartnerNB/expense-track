@@ -32,7 +32,7 @@ const ForgotPassword = ()=>{
         }
       }
     return(
-        <React.Fragment>
+        <section className={styles.main}>
             <h1>Forgot Password</h1>
             <form onSubmit={forgotPasswordHandler}>
             <div className={styles.control}>
@@ -46,7 +46,7 @@ const ForgotPassword = ()=>{
             {isLoading && <p>Sending request...</p>}
             </div>
         </form>
-      </React.Fragment>
+      </section>
     );
 }
 

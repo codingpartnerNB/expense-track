@@ -10,6 +10,10 @@
     color: blue;
 }
 
+.close{
+    float: right;
+    cursor: pointer;
+}
 
 .control {
     margin-bottom: 0.5rem;
@@ -23,7 +27,7 @@
     margin-bottom: 0.5rem;
 }
 
-.control input {
+.control input, .control select {
     font: inherit;
     background-color: #f1e1fc;
     color: black;
