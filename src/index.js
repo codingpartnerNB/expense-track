@@ -4,12 +4,15 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthContextProvider } from './store/auth-context';
+import { ExpenseContextProvider } from './store/expense-context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <App />
+      <ExpenseContextProvider>
+        <App />
+      </ExpenseContextProvider>
     </AuthContextProvider>
   </React.StrictMode>
 );

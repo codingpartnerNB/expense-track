@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Modal from "../UI/Modal";
 import styles from './ExpenseForm.module.css';
+import ExpenseContext from "../../store/expense-context";
+import AuthContext from "../../store/auth-context";
 
 const ExpenseForm = (props)=>{
     const [price, setPrice] = useState("");
     const [desc, setDesc] = useState("");
     const [category, setCategory] = useState("");
+    const authCtx = useContext(AuthContext);
+    const email = authCtx.email;
+    const expenseCtx = useContext(ExpenseContext);
+    const expenseId = props.expenseId;
     const priceChangeHandler = (event)=>{
         setPrice(event.target.value);
     }
@@ -15,6 +21,29 @@ const ExpenseForm = (props)=>{
     const categoryChangeHandler = (event)=>{
         setCategory(event.target.value);
     }
+
+    const fetchHandler = async()=>{
+        const url = `https://expense-track-ddb59-default-rtdb.firebaseio.com/expenses${email.replace(/[@.]/g,"")}/${expenseId}.json`;
+        try{
+            const res = await fetch(url);
+            if(!res.ok){
+                throw new Error("Something went wrong while fetching expenses!");
+            }
+            const resdata = await res.json(); 
+            setPrice(resdata.price);
+            setCategory(resdata.category);
+            setDesc(resdata.description);
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    useEffect(()=>{
+        if(expenseId){
+            fetchHandler();
+        }
+    },[expenseId]);
+    
     const submitHandler = async(event)=>{
         event.preventDefault();
         const data = {
@@ -22,32 +51,20 @@ const ExpenseForm = (props)=>{
             description: desc,
             category: category
         }
-        const url = `https://expense-track-ddb59-default-rtdb.firebaseio.com/expenses.json`;
-        try{
-            const res = await fetch(url, {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            const resdata = await res.json(); 
-            console.log(resdata);   
-            if(!res.ok){
-                throw new Error("Something went wrong while storing expenses!");
-            }
-        }catch(error){
-            console.log(error);
+        if(expenseId){
+            expenseCtx.editItem(data, expenseId);
+        }else{
+            expenseCtx.addItem(data);
         }
         setPrice("");
         setDesc("");
         setCategory("Select Category");
-        props.onHideCart();
+        props.onHideForm();
     }
     return(
-        <Modal onHideCart={props.onHideCart}>
+        <Modal onHideForm={props.onHideForm}>
             <section className={styles.main}>
-                <div onClick={props.onHideCart} className={styles.close}>X</div>
+                <div onClick={props.onHideForm} className={styles.close}>X</div>
                 <h1>Add Your Expenses</h1>
                 <form onSubmit={submitHandler}>
                     <div className={styles.control}>
@@ -68,7 +85,7 @@ const ExpenseForm = (props)=>{
                         </select>
                     </div>
                     <div className={styles.actions}>
-                        <button type="submit">Submit</button>
+                        <button type="submit">{expenseId ? "Save" : "Submit"}</button>
                     </div>
                 </form>
             </section>

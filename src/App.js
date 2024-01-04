@@ -8,17 +8,9 @@ import AuthContext from "./store/auth-context";
 import Signup from "./components/Signup/Signup";
 import ForgotPassword from "./components/Layout/ForgotPassword";
 import Expenses from "./components/Expenses/Expenses";
-import ExpenseForm from "./components/Expenses/ExpenseForm";
 
 function App() {
   const authCtx = useContext(AuthContext);
-  const [cartIsShown, setCartIsShown] = useState(false);
-  const hideCartHandler = () => {
-    setCartIsShown(false);
-  };
-  const showCartHandler = () => {
-    setCartIsShown(true);
-  };
   return (
     <BrowserRouter>
       <Routes>
@@ -38,15 +30,7 @@ function App() {
           <Route
             path="expenses"
             element={
-              authCtx.isLoggedIn ? (
-                cartIsShown ? (
-                  <ExpenseForm onHideCart={hideCartHandler} />
-                ) : (
-                  <Expenses onShowCart={showCartHandler} />
-                )
-              ) : (
-                <Navigate to="/" />
-              )
+              authCtx.isLoggedIn ? <Expenses /> : <Navigate to="/" />
             }
           />
         </Route>
