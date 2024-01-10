@@ -10,7 +10,7 @@ const ForgotPassword = ()=>{
         const enteredEmail = emailInputRef.current.value;
         const url = "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyCFNkfAZd3AxFad0tQUmqaOC6iCl9eNS7s";
         try{
-            setIsLoading(true);
+          setIsLoading(true);
           const res = await fetch(url,{
             method: "POST",
             body: JSON.stringify({

@@ -31,6 +31,12 @@ td{
     padding-bottom: 5px;
 }
 
+.totalAmt{
+    text-align: center;
+    margin-left: 35%;
+    margin-top: 3rem;
+    font-weight: bold;
+}
 
 .actions{
     margin-top: 2rem;
@@ -40,8 +46,7 @@ td{
     cursor: pointer;
     font: inherit;
     color: white;
-    margin-top: 0.8rem;
-    margin-bottom: 0.8rem;
+    margin: 1rem;
     background-color: blue;
     border: 1px solid rgb(20, 20, 246);
     border-radius: 4px;

@@ -1,16 +1,15 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../UI/Modal";
 import styles from './ExpenseForm.module.css';
-import ExpenseContext from "../../store/expense-context";
-import AuthContext from "../../store/auth-context";
+import { useDispatch, useSelector } from "react-redux";
+import { expenseActions } from "../../store/expenseSlice";
 
 const ExpenseForm = (props)=>{
     const [price, setPrice] = useState("");
     const [desc, setDesc] = useState("");
     const [category, setCategory] = useState("");
-    const authCtx = useContext(AuthContext);
-    const email = authCtx.email;
-    const expenseCtx = useContext(ExpenseContext);
+    const dispatch = useDispatch();
+    const email = useSelector(state => state.auth.email);
     const expenseId = props.expenseId;
     const priceChangeHandler = (event)=>{
         setPrice(event.target.value);
@@ -43,6 +42,47 @@ const ExpenseForm = (props)=>{
             fetchHandler();
         }
     },[expenseId]);
+
+    const editItemHandler = async(item, id)=>{
+        const url = `https://expense-track-ddb59-default-rtdb.firebaseio.com/expenses${email.replace(/[@.]/g, "")}/${id}.json`;
+        try{
+            const res = await fetch(url, {
+                method: "PUT",
+                body: JSON.stringify(item),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            if(!res.ok){
+                throw new Error("Something went wrong while updating expenses!!");
+            }
+            const data = await res.json();
+            dispatch(expenseActions.editItem({data, id}));
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    const addItemHandler = async(item)=>{
+        const url = `https://expense-track-ddb59-default-rtdb.firebaseio.com/expenses${email.replace(/[@.]/g, "")}.json`;
+        try{
+            const res = await fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(item),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if(!res.ok){
+                throw new Error("Something went wrong while storing expenses!");
+            }
+            const resdata = await res.json();
+            const data = {...item, id: resdata.name};
+            dispatch(expenseActions.addItem(data)); 
+        }catch(error){
+            console.log(error);
+        }
+    }
     
     const submitHandler = async(event)=>{
         event.preventDefault();
@@ -52,9 +92,9 @@ const ExpenseForm = (props)=>{
             category: category
         }
         if(expenseId){
-            expenseCtx.editItem(data, expenseId);
+            editItemHandler(data, expenseId);
         }else{
-            expenseCtx.addItem(data);
+            addItemHandler(data);
         }
         setPrice("");
         setDesc("");

@@ -1,13 +1,14 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
-import { useContext } from 'react';
-import AuthContext from '../../store/auth-context';
+import { useDispatch, useSelector } from 'react-redux';
+import { authActions } from '../../store/authSlice';
 
 const Header = ()=>{
-    const authCtx = useContext(AuthContext);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
     const logoutHandler = ()=>{
-        authCtx.logout();
+        dispatch(authActions.logout());
         navigate('/');
     }
     return(
@@ -16,8 +17,8 @@ const Header = ()=>{
             <nav className={styles.nav}>
                 <ul>
                     <li><NavLink to='/'>Home</NavLink></li>
-                    {authCtx.isLoggedIn && (<button onClick={logoutHandler} className={styles.action}>Logout</button>)}
-                    {!authCtx.isLoggedIn && (<li><NavLink to='/'>Login</NavLink></li>)}
+                    {isLoggedIn && (<button onClick={logoutHandler} className={styles.action}>Logout</button>)}
+                    {!isLoggedIn && (<li><NavLink to='/'>Login</NavLink></li>)}
                 </ul>
             </nav>
         </header>

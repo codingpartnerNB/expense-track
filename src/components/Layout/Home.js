@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import styles from './Home.module.css';
-import React, { useContext } from "react";
-import AuthContext from "../../store/auth-context";
+import React from "react";
+import { useSelector } from "react-redux";
 
 const Home = ()=>{
-    const authCtx = useContext(AuthContext);
     const navigate = useNavigate();
+    const token = useSelector(state => state.auth.token);
     const varifyMailHandler = async(event)=>{
         event.preventDefault();
         try{
@@ -13,7 +13,7 @@ const Home = ()=>{
                 method: "POST",
                 body: JSON.stringify({
                     requestType: "VERIFY_EMAIL",
-                    idToken: authCtx.token
+                    idToken: token
                 }),
                 headers: {
                     "Content-Type": "application/json"

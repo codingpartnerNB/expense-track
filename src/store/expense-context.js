@@ -59,7 +59,7 @@ export const ExpenseContextProvider = (props)=>{
             const resdata = await res.json();
             // console.log(resdata); 
             setItems((prevItems)=>{
-                return [{...prevItems}, {...item, id: resdata.name}]
+                return [...prevItems, {...item, id: resdata.name}]
             });   
         }catch(error){
             console.log(error);

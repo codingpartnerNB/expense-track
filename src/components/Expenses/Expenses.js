@@ -1,49 +1,17 @@
-// import { useCallback, useContext, useEffect, useState } from "react";
-import { useContext, useState } from "react";
+import { useState, useEffect } from "react";
 import ExpenseItem from "./ExpenseItem";
 import styles from "./Expenses.module.css";
-// import AuthContext from "../../store/auth-context";
-import ExpenseContext from "../../store/expense-context";
 import ExpenseForm from "./ExpenseForm";
+import { useDispatch, useSelector } from "react-redux";
+import { expenseActions } from "../../store/expenseSlice";
 
 const Expenses = (props) => {
-  // const authCtx = useContext(AuthContext);
-  // const isLoggedIn = authCtx.isLoggedIn;
-  // const [expenses, setExpenses] = useState([]);
-  // const email = authCtx.email;
-  const expenseCtx = useContext(ExpenseContext);
   const [formIsShown, setFormIsShown] = useState(false);
-  const { items } = expenseCtx;
-
-  //Without useContext
-
-  // const fetchHandler = useCallback(async()=>{
-  //   const url = `https://expense-track-ddb59-default-rtdb.firebaseio.com/expenses${email.replace(/[@.]/g,"")}.json`;
-  //   try{
-  //     const res = await fetch(url);
-  //     if(!res.ok){
-  //       throw new Error("Something went wrong while fetching expenses!");
-  //     }
-  //     const data = await res.json();
-  //     const loadedExpenses = [];
-  //     for(const key in data){
-  //       loadedExpenses.push({
-  //         id: key,
-  //         category: data[key].category,
-  //         description: data[key].description,
-  //         price: data[key].price
-  //       })
-  //     }
-  //     setExpenses(loadedExpenses);
-  //   }catch(error){
-  //     console.log(error);
-  //   }
-  // },[]);
-  // useEffect(()=>{
-  //   if(isLoggedIn){
-  //     fetchHandler();
-  //   }
-  // },[isLoggedIn]);
+  const items = useSelector(state => state.expense.items);
+  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+  const email = useSelector(state => state.auth.email);
+  const totalAmt = useSelector(state => state.expense.totalAmount);
+  const dispatch = useDispatch();
 
   const hideFormHandler = () => {
     setFormIsShown(false);
@@ -51,6 +19,35 @@ const Expenses = (props) => {
   const showFormHandler = () => {
     setFormIsShown(true);
   };
+
+  const fetchHandler = async()=>{
+    const url = `https://expense-track-ddb59-default-rtdb.firebaseio.com/expenses${email.replace(/[@.]/g, "")}.json`;
+    try{
+      const res = await fetch(url);
+      if(!res.ok){
+        throw new Error("Something went wrong while fetching expenses!");
+      }
+      const data = await res.json();
+      const expenses = [];
+      for(const key in data){
+        expenses.push({
+          id: key,
+          category: data[key].category,
+          description: data[key].description,
+          price: data[key].price
+        })
+      }
+      const totalAmount = expenses.reduce((current, item) => current + item.price, 0);
+      dispatch(expenseActions.setItem({expenses, totalAmount}));
+    }catch(error){
+      console.log(error);
+    }
+  };
+  useEffect(()=>{
+    if(isLoggedIn){
+      fetchHandler();
+    }
+  },[isLoggedIn]);
 
   const item = items && items.length > 0 ? (
         items.map((item) => (
@@ -63,7 +60,7 @@ const Expenses = (props) => {
           />
         ))
       ) : (
-      <tr className={styles.tr}>
+      <tr className={styles.tr} key="no-expenses">
         <td colSpan="4">No Expenses Here</td>
       </tr>
     );
@@ -73,10 +70,14 @@ const Expenses = (props) => {
       {formIsShown && <ExpenseForm expenseId={null} onHideForm={hideFormHandler} />}
       <div className={styles.actions}>
         <button onClick={showFormHandler}>Add Expense</button>
+        {totalAmt>10000 && <button>Activate Premium</button>}
+      </div>
+      <div className={styles.totalAmt}>
+        Total Amount: {totalAmt}
       </div>
         <table className={styles.container}>
           <thead>
-            <tr key="head">
+            <tr key="expense-head">
               <th>Category<hr/></th>
               <th>Description<hr/></th>
               <th>Price<hr/></th>

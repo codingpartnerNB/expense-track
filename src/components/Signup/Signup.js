@@ -1,11 +1,12 @@
-import { useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import styles from "./Signup.module.css";
-import AuthContext from "../../store/auth-context";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../store/authSlice";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const authCtx = useContext(AuthContext);
+  const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const emailInputRef = useRef();
@@ -56,7 +57,9 @@ const Signup = () => {
       }
       if(isLogin){
         console.log("User has successfully logged in!");
-        authCtx.login(data.email, data.idToken);
+        const email = data.email;
+        const idToken = data.idToken;
+        dispatch(authActions.login({email, idToken})); 
         navigate('/home');
       }else{
         console.log("User has successfully signed up!");

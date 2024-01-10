@@ -1,14 +1,14 @@
-import React, { useContext, useState, useEffect } from "react";
-import AuthContext from "../../store/auth-context";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from './UpdateProfile.module.css';
+import { useSelector } from "react-redux";
 
 const UpdateProfile = ()=>{
     const [name, setName] = useState("");
     const [photoUrl, setPhotoUrl] = useState("");
-    const authCtx = useContext(AuthContext);
     const navigate = useNavigate();
-    const isLoggedIn = authCtx.isLoggedIn;
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const token = useSelector(state => state.auth.token);
     
 
     const nameChangeHandler = (event)=>{
@@ -24,7 +24,7 @@ const UpdateProfile = ()=>{
             const response = await fetch("https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCFNkfAZd3AxFad0tQUmqaOC6iCl9eNS7s",{
                 method: "POST",
                 body: JSON.stringify({
-                    idToken: authCtx.token                    
+                    idToken: token                    
                 }),
                 headers: {
                     "Content-Type": "application/json"
@@ -54,7 +54,7 @@ const UpdateProfile = ()=>{
             const res = await fetch(url,{
                 method: 'POST',
                 body: JSON.stringify({
-                    idToken: authCtx.token,
+                    idToken: token,
                     displayName: name,
                     photoUrl: photoUrl,
                     returnSecureToken: true
