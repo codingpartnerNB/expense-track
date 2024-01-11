@@ -4,6 +4,7 @@ import styles from "./Expenses.module.css";
 import ExpenseForm from "./ExpenseForm";
 import { useDispatch, useSelector } from "react-redux";
 import { expenseActions } from "../../store/expenseSlice";
+import { useNavigate } from "react-router-dom";
 
 const Expenses = (props) => {
   const [formIsShown, setFormIsShown] = useState(false);
@@ -12,6 +13,7 @@ const Expenses = (props) => {
   const email = useSelector(state => state.auth.email);
   const totalAmt = useSelector(state => state.expense.totalAmount);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const hideFormHandler = () => {
     setFormIsShown(false);
@@ -19,6 +21,10 @@ const Expenses = (props) => {
   const showFormHandler = () => {
     setFormIsShown(true);
   };
+
+  const premiumHandler = ()=>{
+    navigate('/premium');
+  }
 
   const fetchHandler = async()=>{
     const url = `https://expense-track-ddb59-default-rtdb.firebaseio.com/expenses${email.replace(/[@.]/g, "")}.json`;
@@ -70,7 +76,7 @@ const Expenses = (props) => {
       {formIsShown && <ExpenseForm expenseId={null} onHideForm={hideFormHandler} />}
       <div className={styles.actions}>
         <button onClick={showFormHandler}>Add Expense</button>
-        {totalAmt>10000 && <button>Activate Premium</button>}
+        {totalAmt>10000 && <button onClick={premiumHandler}>Activate Premium</button>}
       </div>
       <div className={styles.totalAmt}>
         Total Amount: {totalAmt}

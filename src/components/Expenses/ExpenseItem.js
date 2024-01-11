@@ -41,7 +41,7 @@ const ExpenseItem = (props)=>{
             <tr className={styles.tr}>
                 <td>{props.category}</td>
                 <td>{props.description}</td>
-                <td>{props.price}</td>
+                <td>{props.price} Rs</td>
                 <td>
                     <div className={styles.action}>
                         <button onClick={showFormHandler}><img src={edit} alt="edit" title="Edit" /></button>

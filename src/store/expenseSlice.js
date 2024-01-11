@@ -30,7 +30,24 @@ const expenseSlice = createSlice({
         setItem(state, action) {
             state.items = action.payload.expenses;
             state.totalAmount = action.payload.totalAmount;
-        }
+        },
+        downloadExpenses(state) {
+            // Logic to download expenses as CSV
+            let csvContent = "Expense ID,Category,Description,Price\n";
+            state.items.forEach((expense) => {
+              csvContent += `${expense.id},${expense.category},${expense.description},${expense.price}\n`;
+            });
+      
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+      
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'expenses.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        },
     }
 });
 

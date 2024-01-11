@@ -1,0 +1,29 @@
+.dark-theme{
+    background-color: black;
+}
+
+.light-theme{
+    background-color: white;
+}
+
+.light-theme button{
+    cursor: pointer;
+    font: inherit;
+    color: blue;
+    margin: 1rem;
+    background-color: white;
+    border: 1px solid rgb(20, 20, 246);
+    border-radius: 4px;
+    padding: 0.5rem 2.5rem;
+}
+
+.dark-theme button{
+    cursor: pointer;
+    font: inherit;
+    color: white;
+    margin: 1rem;
+    background-color: blue;
+    border: 1px solid rgb(20, 20, 246);
+    border-radius: 4px;
+    padding: 0.5rem 2.5rem;
+}

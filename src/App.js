@@ -8,6 +8,7 @@ import Signup from "./components/Signup/Signup";
 import ForgotPassword from "./components/Layout/ForgotPassword";
 import Expenses from "./components/Expenses/Expenses";
 import { useSelector } from "react-redux";
+import PremiumFeature from "./components/Expenses/PremiumFeature";
 
 function App() {
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
@@ -34,6 +35,7 @@ function App() {
               isLoggedIn ? <Expenses /> : <Navigate to="/" />
             }
           />
+          <Route path="premium" element={isLoggedIn ? <PremiumFeature /> : <Navigate to="/" />} />
         </Route>
       </Routes>
     </BrowserRouter>
