@@ -1,23 +1,10 @@
-.dark-theme{
-    background-color: black;
+.main{
+    text-align: center;
+    margin-top: 5rem;
 }
 
-.light-theme{
-    background-color: white;
-}
 
-.light-theme button{
-    cursor: pointer;
-    font: inherit;
-    color: blue;
-    margin: 1rem;
-    background-color: white;
-    border: 1px solid rgb(20, 20, 246);
-    border-radius: 4px;
-    padding: 0.5rem 2.5rem;
-}
-
-.dark-theme button{
+.main button{
     cursor: pointer;
     font: inherit;
     color: white;
@@ -26,4 +13,9 @@
     border: 1px solid rgb(20, 20, 246);
     border-radius: 4px;
     padding: 0.5rem 2.5rem;
+}
+
+.main button:hover{
+    background-color: rgb(13, 13, 101);
+    border: 1px solid rgb(20, 20, 246);
 }

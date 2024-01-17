@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { authActions } from "../../store/authSlice";
+import { uiActions } from "../../store/uiSlice";
 import { expenseActions } from "../../store/expenseSlice";
 import styles from './PremiumFeature.module.css';
 
 const PremiumFeature = ()=>{
     const dispatch = useDispatch();
-    const darkMode = useSelector(state => state.isDarkModeOn);
     const email = useSelector(state => state.auth.email);
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
 
@@ -40,18 +39,16 @@ const PremiumFeature = ()=>{
       },[isLoggedIn]);
 
     const themeChangeHandler = ()=>{
-        dispatch(authActions.toggleTheme());
+        dispatch(uiActions.toggleTheme());
     }
     const handleDownloadExpenses = ()=>{
         dispatch(expenseActions.downloadExpenses());
     }
     return(
-        <React.Fragment>
-            <div className={darkMode ? styles['dark-theme'] : styles['light-theme']}>
-                <button onClick={themeChangeHandler}>Toggle Dark Mode</button>
-                <button onClick={handleDownloadExpenses}>Download Expenses</button>
-            </div>
-        </React.Fragment>
+        <div className={styles.main}>
+            <button onClick={themeChangeHandler}>Toggle Dark Mode</button>
+            <button onClick={handleDownloadExpenses}>Download Expenses</button>
+        </div>
     );
 }
 

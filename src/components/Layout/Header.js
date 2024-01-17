@@ -7,12 +7,13 @@ const Header = ()=>{
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+    const darkMode = useSelector(state => state.ui.isDarkModeOn);
     const logoutHandler = ()=>{
         dispatch(authActions.logout());
         navigate('/');
     }
     return(
-        <header className={styles.head}>
+        <header className={`${darkMode ? styles.dark : styles.light} ${styles.head}`}>
             <h1>ExpenseTracky</h1>
             <nav className={styles.nav}>
                 <ul>

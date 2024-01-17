@@ -1,13 +1,15 @@
 import React from 'react';
 import styles from './Modal.module.css';
 import ReactDOM from 'react-dom';
+import { useSelector } from 'react-redux';
 
 const Backdrop = (props)=>{
     return (<div className={styles.backdrop} onClick={props.onHideForm} />)
 }
 
 const ModalOverlay = (props) =>{
-    return <div className={styles.modal}>
+    const darkMode = useSelector(state => state.ui.isDarkModeOn);
+    return <div className={`${styles.modal} ${darkMode ? styles.dark : styles.light}`}>
         <div className={styles.content}>{props.children}</div>
     </div>
 }

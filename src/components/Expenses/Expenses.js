@@ -5,15 +5,19 @@ import ExpenseForm from "./ExpenseForm";
 import { useDispatch, useSelector } from "react-redux";
 import { expenseActions } from "../../store/expenseSlice";
 import { useNavigate } from "react-router-dom";
+import { fetchCategoryHandler } from "../../store/categoryActions";
 
 const Expenses = (props) => {
   const [formIsShown, setFormIsShown] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const items = useSelector(state => state.expense.items);
   const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
   const email = useSelector(state => state.auth.email);
   const totalAmt = useSelector(state => state.expense.totalAmount);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const cat = useSelector(state => state.category.category);
+  const darkMode = useSelector(state => state.ui.isDarkModeOn);
 
   const hideFormHandler = () => {
     setFormIsShown(false);
@@ -22,8 +26,16 @@ const Expenses = (props) => {
     setFormIsShown(true);
   };
 
+  const categoryChangeHandler = (event)=>{
+    setSelectedCategory(event.target.value);
+  }
+
   const premiumHandler = ()=>{
     navigate('/premium');
+  }
+
+  const addCategoryHandler = ()=>{
+    navigate('/categories');
   }
 
   const fetchHandler = async()=>{
@@ -55,8 +67,23 @@ const Expenses = (props) => {
     }
   },[isLoggedIn]);
 
-  const item = items && items.length > 0 ? (
-        items.map((item) => (
+  useEffect(()=>{
+    if(isLoggedIn){
+        dispatch(fetchCategoryHandler(email.replace(/[@.]/g, "")));
+    }
+  },[isLoggedIn]);
+
+
+  const categories = cat && cat.length > 0 && (cat.map((item) => (
+    <option key={item.id} value={item.name}>{item.name}</option>
+  )));
+
+  const filteredItems = selectedCategory === "All" ?
+   items : 
+   items.filter((item)=>(item.category === selectedCategory));
+
+  const item = filteredItems.length > 0 ? (
+        filteredItems.map((item) => (
           <ExpenseItem
             key={item.id}
             id={item.id}
@@ -71,19 +98,27 @@ const Expenses = (props) => {
       </tr>
     );
 
+
   return (
-    <section>
+    <section className={styles.main}>
       {formIsShown && <ExpenseForm expenseId={null} onHideForm={hideFormHandler} />}
       <div className={styles.actions}>
         <button onClick={showFormHandler}>Add Expense</button>
         {totalAmt>10000 && <button onClick={premiumHandler}>Activate Premium</button>}
+        <button onClick={addCategoryHandler}>Add Categories</button>
       </div>
       <div className={styles.totalAmt}>
-        Total Amount: {totalAmt}
+        <span>
+          <select value={selectedCategory} id="category" onChange={categoryChangeHandler}>
+            <option value="All">Select All Category</option>
+            {categories}
+          </select>
+        </span>
+        <span className={darkMode ? styles.dark : styles.light}>Total Amount: {totalAmt} Rs</span>
       </div>
         <table className={styles.container}>
           <thead>
-            <tr key="expense-head">
+            <tr key="expense-head" className={darkMode ? styles.dark : styles.light}>
               <th>Category<hr/></th>
               <th>Description<hr/></th>
               <th>Price<hr/></th>

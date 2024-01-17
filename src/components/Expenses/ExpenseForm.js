@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import Modal from "../UI/Modal";
 import styles from './ExpenseForm.module.css';
 import { useDispatch, useSelector } from "react-redux";
-import { expenseActions } from "../../store/expenseSlice";
+import { addExpenseItem, editExpenseItem } from "../../store/expenseActions";
+import { fetchCategoryHandler } from "../../store/categoryActions";
 
 const ExpenseForm = (props)=>{
     const [price, setPrice] = useState("");
@@ -11,6 +12,9 @@ const ExpenseForm = (props)=>{
     const dispatch = useDispatch();
     const email = useSelector(state => state.auth.email);
     const expenseId = props.expenseId;
+    const cat = useSelector(state => state.category.category);
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+
     const priceChangeHandler = (event)=>{
         setPrice(event.target.value);
     }
@@ -20,6 +24,12 @@ const ExpenseForm = (props)=>{
     const categoryChangeHandler = (event)=>{
         setCategory(event.target.value);
     }
+
+    useEffect(()=>{
+        if(isLoggedIn){
+          dispatch(fetchCategoryHandler(email.replace(/[@.]/g, "")));
+        }
+    },[isLoggedIn]);
 
     const fetchHandler = async()=>{
         const url = `https://expense-track-ddb59-default-rtdb.firebaseio.com/expenses${email.replace(/[@.]/g,"")}/${expenseId}.json`;
@@ -43,64 +53,33 @@ const ExpenseForm = (props)=>{
         }
     },[expenseId]);
 
-    const editItemHandler = async(item, id)=>{
-        const url = `https://expense-track-ddb59-default-rtdb.firebaseio.com/expenses${email.replace(/[@.]/g, "")}/${id}.json`;
-        try{
-            const res = await fetch(url, {
-                method: "PUT",
-                body: JSON.stringify(item),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            })
-            if(!res.ok){
-                throw new Error("Something went wrong while updating expenses!!");
-            }
-            const data = await res.json();
-            dispatch(expenseActions.editItem({data, id}));
-        }catch(error){
-            console.log(error);
-        }
-    }
-
-    const addItemHandler = async(item)=>{
-        const url = `https://expense-track-ddb59-default-rtdb.firebaseio.com/expenses${email.replace(/[@.]/g, "")}.json`;
-        try{
-            const res = await fetch(url, {
-                method: 'POST',
-                body: JSON.stringify(item),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if(!res.ok){
-                throw new Error("Something went wrong while storing expenses!");
-            }
-            const resdata = await res.json();
-            const data = {...item, id: resdata.name};
-            dispatch(expenseActions.addItem(data)); 
-        }catch(error){
-            console.log(error);
-        }
-    }
     
     const submitHandler = async(event)=>{
         event.preventDefault();
-        const data = {
-            price: +price,
-            description: desc,
-            category: category
-        }
-        if(expenseId){
-            editItemHandler(data, expenseId);
+        if(category === ""){
+            alert("Please select a category!");
         }else{
-            addItemHandler(data);
+            const data = {
+                price: +price,
+                description: desc,
+                category: category
+            }
+            if(expenseId){
+                dispatch(editExpenseItem(data, expenseId, email.replace(/[@.]/g, "")));
+            }else{
+                dispatch(addExpenseItem(data, email.replace(/[@.]/g, "")));
+            }
+            setPrice("");
+            setDesc("");
+            setCategory("");
+            props.onHideForm();
         }
-        setPrice("");
-        setDesc("");
-        setCategory("Select Category");
-        props.onHideForm();
     }
+
+    const categories = cat && cat.length > 0 && (cat.map((item) => (
+        <option key={item.id} value={item.name}>{item.name}</option>
+    )));
+    
     return(
         <Modal onHideForm={props.onHideForm}>
             <section className={styles.main}>
@@ -118,10 +97,8 @@ const ExpenseForm = (props)=>{
                     <div className={styles.control}>
                         <label htmlFor="category">Category</label>
                         <select value={category} id="category" onChange={categoryChangeHandler}>
-                            <option>Select Category</option>
-                            <option value="Food">Food</option>
-                            <option value="Petrol">Petrol</option>
-                            <option value="Salary">Salary</option>
+                            <option value="" disabled>Select Category</option>
+                            {categories}
                         </select>
                     </div>
                     <div className={styles.actions}>

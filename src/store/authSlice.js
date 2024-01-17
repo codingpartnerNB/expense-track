@@ -4,7 +4,6 @@ const initialState = {
   token: localStorage.getItem("token"),
   email: localStorage.getItem("email"),
   isLoggedIn: false,
-  isDarkModeOn: false
 };
 
 if (initialState.token) {
@@ -28,9 +27,6 @@ const authSlice = createSlice({
       state.isLoggedIn = false;
       localStorage.removeItem("token");
       localStorage.removeItem("email");
-    },
-    toggleTheme(state) {
-        state.isDarkModeOn = !state.isDarkModeOn;
     },
   },
 });

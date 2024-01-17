@@ -9,9 +9,10 @@ import ForgotPassword from "./components/Layout/ForgotPassword";
 import Expenses from "./components/Expenses/Expenses";
 import { useSelector } from "react-redux";
 import PremiumFeature from "./components/Expenses/PremiumFeature";
+import Categories from "./components/Expenses/Categories/Categories";
 
 function App() {
-  const isLoggedIn = useSelector(state => state.auth.isLoggedIn);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   return (
     <BrowserRouter>
@@ -24,18 +25,21 @@ function App() {
           />
           <Route
             path="update"
-            element={
-              isLoggedIn ? <UpdateProfile /> : <Navigate to="/" />
-            }
+            element={isLoggedIn ? <UpdateProfile /> : <Navigate to="/" />}
           />
           <Route path="forgot" element={<ForgotPassword />} />
           <Route
             path="expenses"
-            element={
-              isLoggedIn ? <Expenses /> : <Navigate to="/" />
-            }
+            element={isLoggedIn ? <Expenses /> : <Navigate to="/" />}
           />
-          <Route path="premium" element={isLoggedIn ? <PremiumFeature /> : <Navigate to="/" />} />
+          <Route
+            path="premium"
+            element={isLoggedIn ? <PremiumFeature /> : <Navigate to="/" />}
+          />
+          <Route
+            path="categories"
+            element={isLoggedIn ? <Categories /> : <Navigate to="/" />}
+          />
         </Route>
       </Routes>
     </BrowserRouter>
