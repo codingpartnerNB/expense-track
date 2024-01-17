@@ -1,10 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import styles from './Home.module.css';
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const Home = ()=>{
     const navigate = useNavigate();
+    const [greeting, setGreeting] = useState("");
     const token = useSelector(state => state.auth.token);
     const varifyMailHandler = async(event)=>{
         event.preventDefault();
@@ -29,6 +30,28 @@ const Home = ()=>{
         }
     }
 
+    useEffect(()=>{
+        const getCurrentTime = ()=>{
+            const currentTime = new Date();
+            const hours = currentTime.getHours();
+            if(hours >= 6 && hours < 12){
+                setGreeting("Good Morning!");
+            }else if(hours >= 12 && hours < 15){
+                setGreeting("Good Afternoon!");
+            }else if(hours >= 15 && hours < 18){
+                setGreeting("Good Evening!");
+            }else{
+                setGreeting("Good Night!");
+            }
+        }
+
+        getCurrentTime();
+
+        //Update greeting every minute
+        const interval = setInterval(getCurrentTime, 60000);
+        return ()=> clearInterval(interval);
+    }, []);
+
     const addExpensesHandler = ()=>{
         navigate('/expenses');
     }
@@ -44,7 +67,7 @@ const Home = ()=>{
                 <hr />
             </header>
             <main className={styles.main}>
-                <h2>Good Morning</h2>
+                <h2>{greeting}</h2>
                 <button className={styles.action} onClick={varifyMailHandler}>Varify Email</button>
                 <button className={styles.action} onClick={addExpensesHandler}>Add Expenses</button>
             </main>
